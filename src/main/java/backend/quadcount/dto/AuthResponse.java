@@ -1,4 +1,5 @@
-package backend.quadcount.model;
+package backend.quadcount.dto;
+import backend.quadcount.model.User;
 import lombok.Data;
 
 import lombok.AllArgsConstructor;

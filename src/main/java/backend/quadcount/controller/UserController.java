@@ -1,24 +1,30 @@
 package backend.quadcount.controller;
 
+import backend.quadcount.api.ResponseUtil;
 
-import backend.quadcount.model.User;
 import backend.quadcount.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
-//@CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class UserController {
-    @Autowired
-    private UserRepository userRepository;
+
+    private final UserRepository userRepository;
+
     @GetMapping
-    public List<User> getUsers(){
-        return (List<User>) this.userRepository.findAll();
+    public ResponseEntity<?> getUsers() {
+        return ResponseUtil.ok(userRepository.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+        return ResponseUtil.ok(
+                userRepository.findById(id)
+                        .orElseThrow(() -> new EntityNotFoundException("User not found"))
+        );
     }
 }

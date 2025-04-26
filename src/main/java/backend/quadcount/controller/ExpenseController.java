@@ -1,61 +1,55 @@
 package backend.quadcount.controller;
 
+import backend.quadcount.api.ResponseUtil;
+import backend.quadcount.dto.ExpenseRequestDto;
 import backend.quadcount.model.Expense;
 import backend.quadcount.service.ExpenseService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/expenses")
+@RequiredArgsConstructor
 public class ExpenseController {
 
-    @Autowired
-    private ExpenseService expenseService;
+    private final ExpenseService expenseService;
 
-    // Get all expenses
+    /* list with paging */
     @GetMapping
-    public List<Expense> getAllExpenses() {
-        return expenseService.getAllExpenses();
+    public ResponseEntity<?> getAllExpenses(Pageable pageable) {
+        Page<Expense> page = expenseService.getAllExpenses(pageable);
+        return ResponseUtil.ok(page);
     }
 
-    // Get expense by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Expense> getExpenseById(@PathVariable Long id) {
-        Optional<Expense> expense = expenseService.getExpenseById(id);
-        return expense.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<?> getExpenseById(@PathVariable Long id) {
+        return ResponseUtil.ok(expenseService.getExpenseById(id));
     }
-
 
     @GetMapping("/group/{id}")
-    public ResponseEntity<List<Expense> > getExpenseByGroupId(@PathVariable Long id) {
-        List<Expense> expense = expenseService.getExpensesByGroupId(id);
-        return ResponseEntity.ok(expense);
+    public ResponseEntity<?> getExpenseByGroupId(@PathVariable Long id) {
+        return ResponseUtil.ok(expenseService.getExpensesByGroupId(id));
     }
 
-    // Create a new expense
     @PostMapping
-    public Expense createExpense(@RequestBody Expense expense) {
-        return expenseService.createExpense(expense);
+    public ResponseEntity<?> createExpense(@Valid @RequestBody ExpenseRequestDto dto) {
+        return ResponseUtil.created(expenseService.createExpense(dto));
     }
 
-    // Update an existing expense
+
     @PutMapping("/{id}")
-    public ResponseEntity<Expense> updateExpense(@PathVariable Long id, @RequestBody Expense expenseDetails) {
-        try {
-            return ResponseEntity.ok(expenseService.updateExpense(id, expenseDetails));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<?> updateExpense(@PathVariable Long id,
+                                           @Valid @RequestBody ExpenseRequestDto dto) {
+        return ResponseUtil.ok(expenseService.updateExpense(id, dto));
     }
 
-    // Delete an expense
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteExpense(@PathVariable Long id) {
+    public ResponseEntity<?> deleteExpense(@PathVariable Long id) {
         expenseService.deleteExpense(id);
-        return ResponseEntity.noContent().build();
+        return ResponseUtil.ok("Deleted");
     }
 }
