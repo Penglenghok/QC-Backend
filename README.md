@@ -135,21 +135,3 @@ All tests run on an **in‑memory H2** datasource via the `test` Spring profile 
 
 _This API is deployed to an AWS Lightsail instance managed by CapRover with automatic HTTPS and zero‑downtime image swaps._
 
----
-
-## 🤝 Contributing
-
-PRs are welcome for additional features:
-
-* Balance‑settlement algorithm
-* Email / push notifications
-* Swagger / OpenAPI spec
-
-Fork → create feature branch → open PR.
-
----
-
-## 📜 License
-
-MIT – see `LICENSE` file.
-
