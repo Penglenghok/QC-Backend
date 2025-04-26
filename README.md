@@ -135,3 +135,9 @@ All tests run on an **in‑memory H2** datasource via the `test` Spring profile 
 
 _This API is deployed to an AWS Lightsail instance managed by CapRover with automatic HTTPS and zero‑downtime image swaps._
 
+Endpoints URL:
+https://qc-backend.caprover.neakphsar.com/
+
+Frontend URL:
+https://qc-frontend.caprover.neakphsar.com/
+
